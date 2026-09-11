@@ -1,0 +1,42 @@
+{
+  "+15555550123": {
+    "firstName": "John",
+    "lastName": "Smith",
+    "dob": "1990-04-12",
+    "addressLine1": "123 Main St",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78701",
+    "email": "john.smith@example.com"
+  },
+  "+15555550456": {
+    "firstName": "Alex",
+    "lastName": "Johnson",
+    "dob": "1988-03-14",
+    "addressLine1": "456 Oak Ave",
+    "city": "Chicago",
+    "state": "IL",
+    "postalCode": "60614",
+    "email": "alex.johnson@example.com"
+  },
+  "+15555550789": {
+    "firstName": "Priya",
+    "lastName": "Patel",
+    "dob": "1992-07-22",
+    "addressLine1": "789 Elm Blvd",
+    "city": "Seattle",
+    "state": "WA",
+    "postalCode": "98101",
+    "email": "priya.patel@example.com"
+  },
+  "+13026900497": {
+    "firstName": "Sean",
+    "lastName": "Monaghan",
+    "dob": "1985-01-01",
+    "addressLine1": "1 Placeholder Ln",
+    "city": "Wilmington",
+    "state": "DE",
+    "postalCode": "19801",
+    "email": "sean.monaghan@example.com"
+  }
+}

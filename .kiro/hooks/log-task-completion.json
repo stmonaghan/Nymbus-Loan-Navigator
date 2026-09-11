@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Log Task Completion",
+      "trigger": "PostTaskExec",
+      "description": "Appends a timestamped entry to docs/ai-collaboration-log.md after each spec task completes, recording the task description, action summary, decisions, and modified files.",
+      "action": {
+        "type": "command",
+        "command": "node -e \"\nconst fs = require('fs');\nconst path = require('path');\nlet input = '';\nprocess.stdin.on('data', d => input += d);\nprocess.stdin.on('end', () => {\n  try {\n    const ctx = JSON.parse(input);\n    const taskDesc = (ctx.task && ctx.task.description) || (ctx.taskDescription) || '(task description unavailable)';\n    const taskId   = (ctx.task && ctx.task.id)          || (ctx.taskId)          || '';\n    const summary  = (ctx.summary)                                                || '(no summary provided)';\n    const decisions = (ctx.decisions)                                             || '(none recorded)';\n    const modified  = (ctx.modifiedFiles && ctx.modifiedFiles.length)\n                       ? ctx.modifiedFiles.join(', ')\n                       : '(none)';\n    const ts = new Date().toISOString();\n    const logPath = path.join(process.env.WORKSPACE_ROOT || '.', 'docs', 'ai-collaboration-log.md');\n    const entry = [\n      '## ' + ts,\n      '**Event:** Task Completed' + (taskId ? ' — Task #' + taskId : ''),\n      '',\n      '**Task:** ' + taskDesc,\n      '',\n      '**Summary of Actions:**',\n      '> ' + summary,\n      '',\n      '**Decisions Made:**',\n      '> ' + decisions,\n      '',\n      '**Files Modified:** ' + modified,\n      '',\n      '---',\n      ''\n    ].join('\\n');\n    fs.mkdirSync(path.dirname(logPath), { recursive: true });\n    fs.appendFileSync(logPath, entry, 'utf8');\n  } catch (e) {\n    // non-blocking — never interrupt the session\n  }\n});\n\""
+      }
+    }
+  ]
+}

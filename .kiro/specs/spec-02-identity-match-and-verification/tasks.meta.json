@@ -1,0 +1,214 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "**Task 1** — Create `lib/mno-mock.ts`: the controlled fixture MNO record store. Export `matchIdentity(phone, lastName, firstInitial): MNORecord | null`.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100791363
+      },
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100799876
+      },
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100937152
+      }
+    ],
+    "**Task 2** — Create `lib/twilio.ts`: `sendOtp(phone)` and `checkOtp(phone, code)` wrappers with try/catch. Return `null`/`false` on failure (never throw to the route handler).": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100791607
+      },
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100942275
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101277265
+      }
+    ],
+    "**Task 3** — Create `lib/session-cache.ts`: in-memory session store with TTL, attempt counter, lock logic, and resend counter.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100791826
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101279849
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101498428
+      }
+    ],
+    "**Task 4** — Create `lib/rate-limit.ts`: per-(phone, IP) rate limiter (max 5 match attempts / 15 min). Reusable across all three identity endpoints.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100792026
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101501045
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101720006
+      }
+    ],
+    "**Task 5** — Create `app/api/identity/match/route.ts`: validate input → rate-limit check → run match (mock or live) → if matched, send OTP, cache record → return response.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100792243
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101725353
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101870665
+      }
+    ],
+    "**Task 6** — Create `app/api/identity/verify-otp/route.ts`: check lock → call Twilio check (or mock approval for test numbers) → on success, return prefill data → on failure, increment counter.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100792371
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789101873687
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102174636
+      }
+    ],
+    "**Task 7** — Create `app/api/identity/resend-otp/route.ts`: check resend count → call `sendOtp` → increment counter.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100792637
+      },
+      {
+        "executionId": "038ab7bd-b640-4cd0-af4b-c2ede324879b",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102177226
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102359389
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102387923
+      }
+    ],
+    "**Task 8** — Build `components/steps/IdentityStep.tsx` (Step 2): phone/lastName/firstInitial form, consent disclosure, client-side validation, POST to `/api/identity/match`, loading state, transitions to OTP screen or fallback.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100792840
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102393827
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102788245
+      }
+    ],
+    "**Task 9** — Build `components/steps/OtpStep.tsx`: 6-digit input with `autocomplete=\"one-time-code\"`, verify CTA, POST to `/api/identity/verify-otp`, error/lock/countdown states, resend link with 30s timer.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100792992
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102793896
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102859989
+      }
+    ],
+    "**Task 10** — Build `components/steps/FallbackIdentityStep.tsx`: manual entry form (firstName, lastName, DOB, address, email). Merges into same confirmed-info shape as the pre-fill path.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100793174
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102863168
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102919758
+      }
+    ],
+    "**Task 11** — Build `components/steps/ConfirmInfoStep.tsx` (Step 3): display pre-filled or manually entered fields, editable inputs, \"Pre-filled\" badge component, Confirm CTA.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100793327
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102922669
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102983009
+      }
+    ],
+    "**Task 12** — Wire all identity steps into `StepWizard.tsx`. Test the full match → OTP → prefill path and the no-match → fallback path end-to-end.": [
+      {
+        "executionId": "779dca9c-14ff-4389-a8c3-324ebfb4669d",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789100793555
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789102986254
+      },
+      {
+        "executionId": "8c81a4e1-83fd-4120-8315-cf300aa6a762",
+        "chatSessionId": "sess_d122f545-a1bc-4797-bafe-743356ad3a72",
+        "timestamp": 1789103473467
+      }
+    ]
+  }
+}
