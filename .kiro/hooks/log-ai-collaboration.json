@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Log AI Collaboration Activity",
+      "trigger": "Stop",
+      "description": "After each execution completes, append a timestamped entry to docs/ai-collaboration-log.md summarizing the work done, decisions made, and files touched. Always appends, never overwrites.",
+      "action": {
+        "type": "agent",
+        "prompt": "A chunk of work just finished. Record it in the AI collaboration log for an assessment.\n\nOnly log if meaningful work happened this turn — a task finished, or a file was created or significantly edited. If this turn was only a question, discussion, or read-only investigation with no file changes, do NOT write a log entry.\n\nSteps:\n1. Ensure docs/ai-collaboration-log.md exists. If it does not, create it with fs_write containing exactly a first line of \"# AI Collaboration Log\" followed by a blank line. Never overwrite an existing log file.\n2. Get the real current time in US Eastern time by running this exact PowerShell command and using its output verbatim as the timestamp (do NOT invent or use a placeholder time): $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById(\"Eastern Standard Time\"); $et = [System.TimeZoneInfo]::ConvertTime([DateTimeOffset]::UtcNow, $tz); if ($tz.IsDaylightSavingTime($et)) { $a = \"EDT\" } else { $a = \"EST\" }; $et.ToString(\"yyyy-MM-ddTHH:mm:ss\") + \" \" + $a\n3. APPEND (using the fs_append tool — never overwrite) a single new entry in this exact Markdown format:\n\n## <Eastern timestamp from step 2, e.g. 2026-09-12T00:40:52 EDT>\n**What was done:** <one line naming the task or change>\n\n**Summary:** <2-4 sentences describing the action taken>\n\n**Notable decisions:** <key decisions and tradeoffs, or \"None\" if there were none>\n\n**Files touched:** <comma-separated relative paths, or \"None\">\n\n---\n\nKeep the entry concise and factual. Do not restate this instruction in your reply to the user."
+      }
+    }
+  ]
+}
