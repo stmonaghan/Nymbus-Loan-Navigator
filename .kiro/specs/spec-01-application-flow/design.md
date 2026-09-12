@@ -1,3 +1,4 @@
+﻿> **Status: Superseded.** This spec proposed a broader technical scaffold (Zustand state management, React Hook Form + Zod, a separate landing page and `/apply` route, a dedicated `StepIndicator` component). Given the take-home time box, the actual implementation used a simpler architecture built directly with the agent — plain React component state, manual validation, and a single-page flow rendered from `app/page.tsx` via `LoanApplicationFlow.tsx` and `StepWizard.tsx`. This file is kept as a record of that original design, not as a reflection of what was built.
 # spec-01: Application Flow — Design
 
 ## Architecture Decision: SPA Wizard on a Single Route
@@ -182,3 +183,5 @@ PII in sessionStorage is limited to what's needed to restore UI state. Phone num
 - On step transition: `focus()` called on the step's `<h2>` heading (tabIndex=-1)
 - `aria-describedby` on every input points to its `<FieldError>` element (rendered even when empty, with `aria-hidden="true"` when no error)
 - Loan amount slider has `role="slider"`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` (formatted as currency)
+
+

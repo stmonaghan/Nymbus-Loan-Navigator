@@ -1,5 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/api/identity/verify-otp/route": "app/api/identity/verify-otp/route.js",
-  "/api/identity/match/route": "app/api/identity/match/route.js"
-}

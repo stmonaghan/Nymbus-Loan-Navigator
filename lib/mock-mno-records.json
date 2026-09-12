@@ -38,5 +38,15 @@
     "state": "DE",
     "postalCode": "19801",
     "email": "sean.monaghan@example.com"
+  },
+  "+14132976798": {
+    "firstName": "Ashley",
+    "lastName": "Monaghan",
+    "dob": "1990-01-01",
+    "addressLine1": "2 Placeholder Ln",
+    "city": "Springfield",
+    "state": "MA",
+    "postalCode": "01103",
+    "email": "ashley.monaghan@example.com"
   }
 }

@@ -23,14 +23,44 @@ export interface StepWizardProps {
 function getProgressLabel(step: WizardStep): string | null {
   switch (step) {
     case 'identity':
-    case 'otp':
     case 'fallback':
-      return 'Step 1 of 2';
+      return 'Step 1 of 5';
+    case 'otp':
+      return 'Step 2 of 5';
     case 'confirm':
-      return 'Step 2 of 2';
+      return 'Step 3 of 5';
     case 'done':
       return null;
   }
+}
+
+// ─────────────────────────────────────────────
+// Progress bar (presentational)
+// ─────────────────────────────────────────────
+
+function ProgressBar({ label }: { label: string }) {
+  // Parse "Step N of M" to compute fill width; falls back gracefully.
+  const match = label.match(/Step (\d+) of (\d+)/);
+  const current = match ? Number(match[1]) : 0;
+  const total = match ? Number(match[2]) : 1;
+  const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+
+  return (
+    <div className="mb-5">
+      <div className="mb-1.5 flex items-center justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wide text-brand-700">
+          {label}
+        </span>
+        <span className="text-xs font-medium text-slate-400">{pct}%</span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200" role="presentation">
+        <div
+          className="h-full rounded-full bg-brand-600 transition-all duration-500 ease-out"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
+  );
 }
 
 // ─────────────────────────────────────────────
@@ -114,11 +144,14 @@ export function StepWizard({ onComplete }: StepWizardProps) {
   const progressLabel = getProgressLabel(currentStep);
 
   return (
-    <div>
+    <div className="card animate-fade-in">
       {progressLabel && (
-        <p aria-label="Application progress" role="status">
-          {progressLabel}
-        </p>
+        <>
+          <p className="sr-only" aria-label="Application progress" role="status">
+            {progressLabel}
+          </p>
+          <ProgressBar label={progressLabel} />
+        </>
       )}
 
       {currentStep === 'identity' && (
@@ -147,7 +180,7 @@ export function StepWizard({ onComplete }: StepWizardProps) {
       )}
 
       {currentStep === 'done' && (
-        <p>Identity verified. Proceeding…</p>
+        <p className="py-4 text-center text-sm text-slate-500">Identity verified. Proceeding…</p>
       )}
     </div>
   );

@@ -204,17 +204,17 @@ describe('StepWizard', () => {
   });
 
   // Progress indicator — identity step
-  it('shows "Step 1 of 2" progress label on identity step', () => {
+  it('shows "Step 1 of 5" progress label on identity step', () => {
     renderWizard();
-    expect(screen.getByRole('status')).toHaveTextContent('Step 1 of 2');
+    expect(screen.getByRole('status')).toHaveTextContent('Step 1 of 5');
   });
 
   // Progress indicator — confirm step
-  it('shows "Step 2 of 2" progress label on confirm step', () => {
+  it('shows "Step 3 of 5" progress label on confirm step', () => {
     renderWizard();
     fireEvent.click(screen.getByText('Trigger match success'));
     fireEvent.click(screen.getByText('Trigger verified with prefill'));
-    expect(screen.getByRole('status')).toHaveTextContent('Step 2 of 2');
+    expect(screen.getByRole('status')).toHaveTextContent('Step 3 of 5');
   });
 
   // OTP verified without prefill builds blank ConfirmedInfo with source 'manual'

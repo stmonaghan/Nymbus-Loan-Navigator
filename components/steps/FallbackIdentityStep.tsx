@@ -227,22 +227,23 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
   const emailErrorId = `${uid}-email-error`;
 
   return (
-    <section aria-labelledby={`${uid}-heading`}>
-      <h2 id={`${uid}-heading`}>Enter your information</h2>
+    <section className="animate-fade-in" aria-labelledby={`${uid}-heading`}>
+      <h2 className="step-heading" id={`${uid}-heading`}>Enter your information</h2>
 
-      <p>
+      <p className="step-subtext">
         We weren't able to verify your identity automatically — no worries.
         Enter your details below and we'll continue with phone verification.
       </p>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form className="mt-6 space-y-1" onSubmit={handleSubmit} noValidate>
         {/* ── First name ── */}
-        <div>
-          <label htmlFor={firstNameId}>
+        <div className="field">
+          <label className="field-label" htmlFor={firstNameId}>
             First name
           </label>
           <input
             id={firstNameId}
+            className={`input ${visibleErrors.firstName ? 'input-error' : ''}`}
             type="text"
             autoComplete="given-name"
             value={values.firstName}
@@ -253,19 +254,20 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
             required
           />
           {visibleErrors.firstName && (
-            <span id={firstNameErrorId} role="alert">
+            <span className="field-error" id={firstNameErrorId} role="alert">
               {visibleErrors.firstName}
             </span>
           )}
         </div>
 
         {/* ── Last name ── */}
-        <div>
-          <label htmlFor={lastNameId}>
+        <div className="field">
+          <label className="field-label" htmlFor={lastNameId}>
             Last name
           </label>
           <input
             id={lastNameId}
+            className={`input ${visibleErrors.lastName ? 'input-error' : ''}`}
             type="text"
             autoComplete="family-name"
             value={values.lastName}
@@ -276,19 +278,20 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
             required
           />
           {visibleErrors.lastName && (
-            <span id={lastNameErrorId} role="alert">
+            <span className="field-error" id={lastNameErrorId} role="alert">
               {visibleErrors.lastName}
             </span>
           )}
         </div>
 
         {/* ── Date of birth ── */}
-        <div>
-          <label htmlFor={dobId}>
+        <div className="field">
+          <label className="field-label" htmlFor={dobId}>
             Date of birth
           </label>
           <input
             id={dobId}
+            className={`input ${visibleErrors.dob ? 'input-error' : ''}`}
             type="date"
             autoComplete="bday"
             value={values.dob}
@@ -299,19 +302,20 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
             required
           />
           {visibleErrors.dob && (
-            <span id={dobErrorId} role="alert">
+            <span className="field-error" id={dobErrorId} role="alert">
               {visibleErrors.dob}
             </span>
           )}
         </div>
 
         {/* ── Address line 1 ── */}
-        <div>
-          <label htmlFor={addressLine1Id}>
+        <div className="field">
+          <label className="field-label" htmlFor={addressLine1Id}>
             Address
           </label>
           <input
             id={addressLine1Id}
+            className={`input ${visibleErrors.addressLine1 ? 'input-error' : ''}`}
             type="text"
             autoComplete="address-line1"
             value={values.addressLine1}
@@ -322,19 +326,20 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
             required
           />
           {visibleErrors.addressLine1 && (
-            <span id={addressLine1ErrorId} role="alert">
+            <span className="field-error" id={addressLine1ErrorId} role="alert">
               {visibleErrors.addressLine1}
             </span>
           )}
         </div>
 
         {/* ── City ── */}
-        <div>
-          <label htmlFor={cityId}>
+        <div className="field">
+          <label className="field-label" htmlFor={cityId}>
             City
           </label>
           <input
             id={cityId}
+            className={`input ${visibleErrors.city ? 'input-error' : ''}`}
             type="text"
             autoComplete="address-level2"
             value={values.city}
@@ -345,68 +350,73 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
             required
           />
           {visibleErrors.city && (
-            <span id={cityErrorId} role="alert">
+            <span className="field-error" id={cityErrorId} role="alert">
               {visibleErrors.city}
             </span>
           )}
         </div>
 
-        {/* ── State ── */}
-        <div>
-          <label htmlFor={stateId}>
-            State
-          </label>
-          <input
-            id={stateId}
-            type="text"
-            autoComplete="address-level1"
-            maxLength={2}
-            placeholder="TX"
-            value={values.state}
-            onChange={handleChange('state')}
-            onBlur={handleBlur('state')}
-            aria-invalid={!!visibleErrors.state}
-            aria-describedby={visibleErrors.state ? stateErrorId : undefined}
-            required
-          />
-          {visibleErrors.state && (
-            <span id={stateErrorId} role="alert">
-              {visibleErrors.state}
-            </span>
-          )}
-        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {/* ── State ── */}
+          <div className="field">
+            <label className="field-label" htmlFor={stateId}>
+              State
+            </label>
+            <input
+              id={stateId}
+              className={`input ${visibleErrors.state ? 'input-error' : ''}`}
+              type="text"
+              autoComplete="address-level1"
+              maxLength={2}
+              placeholder="TX"
+              value={values.state}
+              onChange={handleChange('state')}
+              onBlur={handleBlur('state')}
+              aria-invalid={!!visibleErrors.state}
+              aria-describedby={visibleErrors.state ? stateErrorId : undefined}
+              required
+            />
+            {visibleErrors.state && (
+              <span className="field-error" id={stateErrorId} role="alert">
+                {visibleErrors.state}
+              </span>
+            )}
+          </div>
 
-        {/* ── Postal code ── */}
-        <div>
-          <label htmlFor={postalCodeId}>
-            ZIP code
-          </label>
-          <input
-            id={postalCodeId}
-            type="text"
-            autoComplete="postal-code"
-            value={values.postalCode}
-            onChange={handleChange('postalCode')}
-            onBlur={handleBlur('postalCode')}
-            aria-invalid={!!visibleErrors.postalCode}
-            aria-describedby={visibleErrors.postalCode ? postalCodeErrorId : undefined}
-            placeholder="78701"
-            required
-          />
-          {visibleErrors.postalCode && (
-            <span id={postalCodeErrorId} role="alert">
-              {visibleErrors.postalCode}
-            </span>
-          )}
+          {/* ── Postal code ── */}
+          <div className="field">
+            <label className="field-label" htmlFor={postalCodeId}>
+              ZIP code
+            </label>
+            <input
+              id={postalCodeId}
+              className={`input ${visibleErrors.postalCode ? 'input-error' : ''}`}
+              type="text"
+              autoComplete="postal-code"
+              value={values.postalCode}
+              onChange={handleChange('postalCode')}
+              onBlur={handleBlur('postalCode')}
+              aria-invalid={!!visibleErrors.postalCode}
+              aria-describedby={visibleErrors.postalCode ? postalCodeErrorId : undefined}
+              placeholder="78701"
+              required
+            />
+            {visibleErrors.postalCode && (
+              <span className="field-error" id={postalCodeErrorId} role="alert">
+                {visibleErrors.postalCode}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* ── Email ── */}
-        <div>
-          <label htmlFor={emailId}>
+        <div className="field">
+          <label className="field-label" htmlFor={emailId}>
             Email address
           </label>
           <input
             id={emailId}
+            className={`input ${visibleErrors.email ? 'input-error' : ''}`}
             type="email"
             autoComplete="email"
             value={values.email}
@@ -417,14 +427,14 @@ export function FallbackIdentityStep({ onComplete }: FallbackIdentityStepProps) 
             required
           />
           {visibleErrors.email && (
-            <span id={emailErrorId} role="alert">
+            <span className="field-error" id={emailErrorId} role="alert">
               {visibleErrors.email}
             </span>
           )}
         </div>
 
         {/* ── Submit button ── */}
-        <button type="submit">
+        <button type="submit" className="btn btn-primary">
           Continue
         </button>
       </form>

@@ -271,20 +271,21 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
   // ─────────────────────────────────────────────
 
   return (
-    <section aria-labelledby={`${uid}-heading`}>
-      <h2 id={`${uid}-heading`}>Enter your verification code</h2>
+    <section className="animate-fade-in" aria-labelledby={`${uid}-heading`}>
+      <h2 className="step-heading" id={`${uid}-heading`}>Enter your verification code</h2>
 
-      <p>
+      <p className="step-subtext">
         We sent a 6-digit code to <strong>{phoneNumber}</strong>. Enter it below
         to verify your identity.
       </p>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form className="mt-6 space-y-1" onSubmit={handleSubmit} noValidate>
         {/* ── OTP input ── */}
-        <div>
-          <label htmlFor={codeId}>One-time code</label>
+        <div className="field">
+          <label className="field-label" htmlFor={codeId}>One-time code</label>
           <input
             id={codeId}
+            className={`input text-center tracking-[0.5em] text-lg ${codeError ? 'input-error' : ''}`}
             type="text"
             inputMode="numeric"
             autoComplete="one-time-code"
@@ -305,7 +306,7 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
             required
           />
           {codeError && (
-            <span id={codeErrorId} role="alert">
+            <span className="field-error" id={codeErrorId} role="alert">
               {codeError}
             </span>
           )}
@@ -313,20 +314,20 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
 
         {/* ── Verify error ── */}
         {verifyError && (
-          <p id={verifyErrorId} role="alert">
+          <p className="alert-error" id={verifyErrorId} role="alert">
             {verifyError}
           </p>
         )}
 
         {/* ── Lock status ── */}
         {isLocked && (
-          <p id={lockStatusId} aria-live="polite">
+          <p className="alert-warn" id={lockStatusId} aria-live="polite">
             Too many incorrect codes. Try again in{' '}
             <strong>{formatCountdown(lockSecondsLeft)}</strong>.
           </p>
         )}
         {lockExpired && !isLocked && (
-          <p id={lockStatusId} aria-live="polite">
+          <p className="mt-3 text-sm font-medium text-emerald-700" id={lockStatusId} aria-live="polite">
             You may try again now.
           </p>
         )}
@@ -334,38 +335,40 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
         {/* ── Submit button ── */}
         <button
           type="submit"
+          className="btn btn-primary"
           disabled={isFormDisabled}
           aria-disabled={isFormDisabled}
         >
-          {isLoading ? 'Verifying…' : 'Verify code'}
+          {isLoading ? (<><span className="spinner" aria-hidden="true" /> Verifying…</>) : 'Verify code'}
         </button>
       </form>
 
       {/* ── Resend section ── */}
-      <div>
+      <div className="mt-5 border-t border-slate-100 pt-4 text-center">
         {!resendHidden ? (
           <>
             {resendCooldown > 0 ? (
-              <span id={resendStatusId} aria-live="polite">
+              <span className="text-sm text-slate-400" id={resendStatusId} aria-live="polite">
                 Resend in <strong>{resendCooldown}s</strong>
               </span>
             ) : (
               <button
                 type="button"
+                className="btn btn-ghost"
                 onClick={handleResend}
                 disabled={resendDisabled}
                 aria-disabled={resendDisabled}
               >
-                {isResending ? 'Sending…' : "Didn't receive a code? Resend"}
+                {isResending ? (<><span className="spinner-brand" aria-hidden="true" /> Sending…</>) : "Didn't receive a code? Resend"}
               </button>
             )}
           </>
         ) : (
-          <p aria-live="polite">Maximum resends reached.</p>
+          <p className="text-sm text-slate-400" aria-live="polite">Maximum resends reached.</p>
         )}
 
         {resendError && (
-          <p role="alert">{resendError}</p>
+          <p className="alert-error mt-3" role="alert">{resendError}</p>
         )}
       </div>
     </section>

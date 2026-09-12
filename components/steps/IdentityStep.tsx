@@ -174,22 +174,23 @@ export function IdentityStep({ onMatchSuccess, onNoMatch }: IdentityStepProps) {
   const submitErrorId = `${uid}-submit-error`;
 
   return (
-    <section aria-labelledby={`${uid}-heading`}>
-      <h2 id={`${uid}-heading`}>Verify your identity</h2>
+    <section className="animate-fade-in" aria-labelledby={`${uid}-heading`}>
+      <h2 className="step-heading" id={`${uid}-heading`}>Verify your identity</h2>
 
-      <p>
+      <p className="step-subtext">
         We use your phone number and name to confirm your identity — no credit
         pull at this stage.
       </p>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form className="mt-6 space-y-1" onSubmit={handleSubmit} noValidate>
         {/* ── Phone number ── */}
-        <div>
-          <label htmlFor={phoneId}>
+        <div className="field">
+          <label className="field-label" htmlFor={phoneId}>
             Mobile phone number
           </label>
           <input
             id={phoneId}
+            className={`input ${visibleErrors.phoneNumber ? 'input-error' : ''}`}
             type="tel"
             autoComplete="tel"
             value={values.phoneNumber}
@@ -202,19 +203,20 @@ export function IdentityStep({ onMatchSuccess, onNoMatch }: IdentityStepProps) {
             required
           />
           {visibleErrors.phoneNumber && (
-            <span id={phoneErrorId} role="alert">
+            <span className="field-error" id={phoneErrorId} role="alert">
               {visibleErrors.phoneNumber}
             </span>
           )}
         </div>
 
         {/* ── Last name ── */}
-        <div>
-          <label htmlFor={lastNameId}>
+        <div className="field">
+          <label className="field-label" htmlFor={lastNameId}>
             Last name
           </label>
           <input
             id={lastNameId}
+            className={`input ${visibleErrors.lastName ? 'input-error' : ''}`}
             type="text"
             autoComplete="family-name"
             value={values.lastName}
@@ -226,19 +228,20 @@ export function IdentityStep({ onMatchSuccess, onNoMatch }: IdentityStepProps) {
             required
           />
           {visibleErrors.lastName && (
-            <span id={lastNameErrorId} role="alert">
+            <span className="field-error" id={lastNameErrorId} role="alert">
               {visibleErrors.lastName}
             </span>
           )}
         </div>
 
         {/* ── First name initial ── */}
-        <div>
-          <label htmlFor={initialId}>
+        <div className="field">
+          <label className="field-label" htmlFor={initialId}>
             First name initial
           </label>
           <input
             id={initialId}
+            className={`input ${visibleErrors.firstNameInitial ? 'input-error' : ''}`}
             type="text"
             autoComplete="given-name"
             maxLength={1}
@@ -251,21 +254,21 @@ export function IdentityStep({ onMatchSuccess, onNoMatch }: IdentityStepProps) {
             required
           />
           {visibleErrors.firstNameInitial && (
-            <span id={initialErrorId} role="alert">
+            <span className="field-error" id={initialErrorId} role="alert">
               {visibleErrors.firstNameInitial}
             </span>
           )}
         </div>
 
         {/* ── Consent disclosure (visible, not collapsed) ── */}
-        <p aria-live="polite">
+        <p className="banner-info mb-4" aria-live="polite">
           By continuing, you authorize Nymbus Loan Navigator to verify your
           identity using your mobile carrier data.
         </p>
 
         {/* ── Submit-level error ── */}
         {submitError && (
-          <p id={submitErrorId} role="alert">
+          <p className="alert-error" id={submitErrorId} role="alert">
             {submitError}
           </p>
         )}
@@ -273,11 +276,12 @@ export function IdentityStep({ onMatchSuccess, onNoMatch }: IdentityStepProps) {
         {/* ── Submit button ── */}
         <button
           type="submit"
+          className="btn btn-primary"
           disabled={isLoading}
           aria-disabled={isLoading}
           aria-describedby={submitError ? submitErrorId : undefined}
         >
-          {isLoading ? 'Checking…' : 'Continue'}
+          {isLoading ? (<><span className="spinner" aria-hidden="true" /> Checking…</>) : 'Continue'}
         </button>
       </form>
     </section>

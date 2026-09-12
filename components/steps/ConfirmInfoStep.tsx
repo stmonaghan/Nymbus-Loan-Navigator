@@ -116,7 +116,7 @@ function hasErrors(errors: FormErrors): boolean {
 
 function PrefilledBadge() {
   return (
-    <span aria-label="Data was pre-filled from carrier">
+    <span className="badge ml-2" aria-label="Data was pre-filled from carrier">
       Pre-filled
     </span>
   );
@@ -232,27 +232,28 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
   const emailErrorId = `${uid}-email-error`;
 
   return (
-    <section aria-labelledby={`${uid}-heading`}>
-      <h2 id={`${uid}-heading`}>
+    <section className="animate-fade-in" aria-labelledby={`${uid}-heading`}>
+      <h2 className="step-heading" id={`${uid}-heading`}>
         Review your information{isPrefill && <> <PrefilledBadge /></>}
       </h2>
 
-      <p>
+      <p className="step-subtext">
         {isPrefill
           ? 'We filled this in from your carrier data. Review and edit as needed.'
           : 'Review and confirm your details below.'}
       </p>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-1">
         {/* ── First name ── */}
-        <div>
-          <label htmlFor={firstNameId}>
+        <div className="field">
+          <label className="field-label" htmlFor={firstNameId}>
             First name
           </label>
           <input
             id={firstNameId}
             type="text"
             autoComplete="given-name"
+            className={`input ${visibleErrors.firstName ? 'input-error' : ''}`}
             value={values.firstName}
             onChange={handleChange('firstName')}
             onBlur={handleBlur('firstName')}
@@ -261,21 +262,22 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
             required
           />
           {visibleErrors.firstName && (
-            <span id={firstNameErrorId} role="alert">
+            <span className="field-error" id={firstNameErrorId} role="alert">
               {visibleErrors.firstName}
             </span>
           )}
         </div>
 
         {/* ── Last name ── */}
-        <div>
-          <label htmlFor={lastNameId}>
+        <div className="field">
+          <label className="field-label" htmlFor={lastNameId}>
             Last name
           </label>
           <input
             id={lastNameId}
             type="text"
             autoComplete="family-name"
+            className={`input ${visibleErrors.lastName ? 'input-error' : ''}`}
             value={values.lastName}
             onChange={handleChange('lastName')}
             onBlur={handleBlur('lastName')}
@@ -284,21 +286,22 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
             required
           />
           {visibleErrors.lastName && (
-            <span id={lastNameErrorId} role="alert">
+            <span className="field-error" id={lastNameErrorId} role="alert">
               {visibleErrors.lastName}
             </span>
           )}
         </div>
 
         {/* ── Date of birth ── */}
-        <div>
-          <label htmlFor={dobId}>
+        <div className="field">
+          <label className="field-label" htmlFor={dobId}>
             Date of birth
           </label>
           <input
             id={dobId}
             type="date"
             autoComplete="bday"
+            className={`input ${visibleErrors.dob ? 'input-error' : ''}`}
             value={values.dob}
             onChange={handleChange('dob')}
             onBlur={handleBlur('dob')}
@@ -307,21 +310,22 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
             required
           />
           {visibleErrors.dob && (
-            <span id={dobErrorId} role="alert">
+            <span className="field-error" id={dobErrorId} role="alert">
               {visibleErrors.dob}
             </span>
           )}
         </div>
 
         {/* ── Address line 1 ── */}
-        <div>
-          <label htmlFor={addressLine1Id}>
+        <div className="field">
+          <label className="field-label" htmlFor={addressLine1Id}>
             Address
           </label>
           <input
             id={addressLine1Id}
             type="text"
             autoComplete="address-line1"
+            className={`input ${visibleErrors.addressLine1 ? 'input-error' : ''}`}
             value={values.addressLine1}
             onChange={handleChange('addressLine1')}
             onBlur={handleBlur('addressLine1')}
@@ -330,21 +334,22 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
             required
           />
           {visibleErrors.addressLine1 && (
-            <span id={addressLine1ErrorId} role="alert">
+            <span className="field-error" id={addressLine1ErrorId} role="alert">
               {visibleErrors.addressLine1}
             </span>
           )}
         </div>
 
         {/* ── City ── */}
-        <div>
-          <label htmlFor={cityId}>
+        <div className="field">
+          <label className="field-label" htmlFor={cityId}>
             City
           </label>
           <input
             id={cityId}
             type="text"
             autoComplete="address-level2"
+            className={`input ${visibleErrors.city ? 'input-error' : ''}`}
             value={values.city}
             onChange={handleChange('city')}
             onBlur={handleBlur('city')}
@@ -353,70 +358,75 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
             required
           />
           {visibleErrors.city && (
-            <span id={cityErrorId} role="alert">
+            <span className="field-error" id={cityErrorId} role="alert">
               {visibleErrors.city}
             </span>
           )}
         </div>
 
-        {/* ── State ── */}
-        <div>
-          <label htmlFor={stateId}>
-            State
-          </label>
-          <input
-            id={stateId}
-            type="text"
-            autoComplete="address-level1"
-            maxLength={2}
-            placeholder="TX"
-            value={values.state}
-            onChange={handleChange('state')}
-            onBlur={handleBlur('state')}
-            aria-invalid={!!visibleErrors.state}
-            aria-describedby={visibleErrors.state ? stateErrorId : undefined}
-            required
-          />
-          {visibleErrors.state && (
-            <span id={stateErrorId} role="alert">
-              {visibleErrors.state}
-            </span>
-          )}
-        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {/* ── State ── */}
+          <div className="field">
+            <label className="field-label" htmlFor={stateId}>
+              State
+            </label>
+            <input
+              id={stateId}
+              type="text"
+              autoComplete="address-level1"
+              maxLength={2}
+              placeholder="TX"
+              className={`input ${visibleErrors.state ? 'input-error' : ''}`}
+              value={values.state}
+              onChange={handleChange('state')}
+              onBlur={handleBlur('state')}
+              aria-invalid={!!visibleErrors.state}
+              aria-describedby={visibleErrors.state ? stateErrorId : undefined}
+              required
+            />
+            {visibleErrors.state && (
+              <span className="field-error" id={stateErrorId} role="alert">
+                {visibleErrors.state}
+              </span>
+            )}
+          </div>
 
-        {/* ── Postal code ── */}
-        <div>
-          <label htmlFor={postalCodeId}>
-            ZIP code
-          </label>
-          <input
-            id={postalCodeId}
-            type="text"
-            autoComplete="postal-code"
-            placeholder="78701"
-            value={values.postalCode}
-            onChange={handleChange('postalCode')}
-            onBlur={handleBlur('postalCode')}
-            aria-invalid={!!visibleErrors.postalCode}
-            aria-describedby={visibleErrors.postalCode ? postalCodeErrorId : undefined}
-            required
-          />
-          {visibleErrors.postalCode && (
-            <span id={postalCodeErrorId} role="alert">
-              {visibleErrors.postalCode}
-            </span>
-          )}
+          {/* ── Postal code ── */}
+          <div className="field">
+            <label className="field-label" htmlFor={postalCodeId}>
+              ZIP code
+            </label>
+            <input
+              id={postalCodeId}
+              type="text"
+              autoComplete="postal-code"
+              placeholder="78701"
+              className={`input ${visibleErrors.postalCode ? 'input-error' : ''}`}
+              value={values.postalCode}
+              onChange={handleChange('postalCode')}
+              onBlur={handleBlur('postalCode')}
+              aria-invalid={!!visibleErrors.postalCode}
+              aria-describedby={visibleErrors.postalCode ? postalCodeErrorId : undefined}
+              required
+            />
+            {visibleErrors.postalCode && (
+              <span className="field-error" id={postalCodeErrorId} role="alert">
+                {visibleErrors.postalCode}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* ── Email ── */}
-        <div>
-          <label htmlFor={emailId}>
+        <div className="field">
+          <label className="field-label" htmlFor={emailId}>
             Email address
           </label>
           <input
             id={emailId}
             type="email"
             autoComplete="email"
+            className={`input ${visibleErrors.email ? 'input-error' : ''}`}
             value={values.email}
             onChange={handleChange('email')}
             onBlur={handleBlur('email')}
@@ -425,14 +435,14 @@ export function ConfirmInfoStep({ info, onConfirm }: ConfirmInfoStepProps) {
             required
           />
           {visibleErrors.email && (
-            <span id={emailErrorId} role="alert">
+            <span className="field-error" id={emailErrorId} role="alert">
               {visibleErrors.email}
             </span>
           )}
         </div>
 
         {/* ── Confirm CTA ── */}
-        <button type="submit">
+        <button type="submit" className="btn btn-primary">
           Confirm
         </button>
       </form>

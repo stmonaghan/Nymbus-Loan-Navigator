@@ -1,3 +1,4 @@
+﻿> **Status: Superseded.** This spec captured an initial, broader design (API-backed decision engine, counter-offers, adverse-action notices, e-sign closing flow). Given the take-home time box, I made a deliberate call to implement a leaner, fully-working version directly instead — see `lib/loan-decision.ts`, `components/loan/LoanApplicationForm.tsx`, and `components/loan/LoanOfferScreen.tsx`. This file is kept as a record of that scope decision, not as a reflection of what was built.
 # spec-03: Decision Engine — Requirements
 
 ## Overview
@@ -75,3 +76,5 @@ After the applicant submits their application (Step 5), the system runs a rules-
 | Default | All above pass | Approved at requested amount |
 
 **Decision log:** These thresholds are illustrative stand-ins for a real bureau-pull engine. In production, this function is replaced by an Experian/Plaid call. The interface contract (`DecisionResult`) does not change.
+
+

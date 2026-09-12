@@ -1,3 +1,4 @@
+﻿> **Status: Superseded.** This spec proposed a broader technical scaffold (Zustand state management, React Hook Form + Zod, a separate landing page and `/apply` route, a dedicated `StepIndicator` component). Given the take-home time box, the actual implementation used a simpler architecture built directly with the agent — plain React component state, manual validation, and a single-page flow rendered from `app/page.tsx` via `LoanApplicationFlow.tsx` and `StepWizard.tsx`. This file is kept as a record of that original design, not as a reflection of what was built.
 # spec-01: Application Flow — Requirements
 
 ## Problem Statement
@@ -109,3 +110,5 @@ Steps and their fields:
 - SSN field (deliberately out of scope for this take-home — documented decision: data minimization; income + DTI are sufficient inputs for the rules engine)
 - Returning-user login / account creation
 - Loan officer dashboard
+
+
