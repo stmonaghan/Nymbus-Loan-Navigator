@@ -19,6 +19,8 @@ export interface PrefillData {
 
 export interface OtpStepProps {
   phoneNumber: string;
+  /** Signed session token issued by /api/identity/match. */
+  sessionToken: string;
   onVerified: (prefill: PrefillData | null) => void;
 }
 
@@ -57,8 +59,12 @@ function formatCountdown(seconds: number): string {
 // Component
 // ─────────────────────────────────────────────
 
-export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
+export function OtpStep({ phoneNumber, sessionToken: initialToken, onVerified }: OtpStepProps) {
   const uid = useId();
+
+  // The session token is refreshed by verify/resend responses (it carries the
+  // updated attempt/resend counters), so track the latest value in a ref.
+  const tokenRef = useRef<string>(initialToken);
 
   const [code, setCode] = useState('');
   const [touched, setTouched] = useState(false);
@@ -162,7 +168,7 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
         const res = await fetch('/api/identity/verify-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phoneNumber, code }),
+          body: JSON.stringify({ phoneNumber, code, sessionToken: tokenRef.current }),
         });
 
         if (res.status === 200) {
@@ -178,7 +184,11 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
             error: string;
             locked: boolean;
             attemptsRemaining: number;
+            sessionToken?: string | null;
           };
+
+          // Refresh the token so the next attempt carries the updated counter.
+          if (data.sessionToken) tokenRef.current = data.sessionToken;
 
           if (data.locked) {
             startLockCountdown(LOCK_DURATION_SECONDS);
@@ -226,10 +236,13 @@ export function OtpStep({ phoneNumber, onVerified }: OtpStepProps) {
       const res = await fetch('/api/identity/resend-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber }),
+        body: JSON.stringify({ phoneNumber, sessionToken: tokenRef.current }),
       });
 
       if (res.status === 200) {
+        const data = (await res.json()) as { resent: boolean; sessionToken?: string | null };
+        // Refresh the token so it carries the updated resend counter.
+        if (data.sessionToken) tokenRef.current = data.sessionToken;
         const nextCount = resendCount + 1;
         setResendCount(nextCount);
         startResendCooldown();

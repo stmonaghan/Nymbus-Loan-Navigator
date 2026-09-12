@@ -61,3 +61,13 @@ This file is automatically maintained by Kiro hooks. Each entry records a user p
 **Files touched:** docs/ai-collaboration-log.md
 
 ---
+## 2026-09-12T01:44:33 EDT
+**What was done:** Fixed the OTP "session timed out" bug on Vercel by moving session storage from in-memory to stateless signed tokens
+
+**Summary:** Diagnosed that lib/session-cache.ts stored OTP sessions in an in-process Map on globalThis, which does not persist across separate Vercel serverless invocations — so the session written by /api/identity/match was invisible to /api/identity/verify-otp, surfacing as "session timed out." Rewrote session-cache.ts to encode session state (phone, matched record, expiry, counters) into an HMAC-SHA256-signed, 10-minute-expiring token that the client holds and returns on each call. Threaded the token through the match, verify-otp, and resend-otp routes and the client components (IdentityStep, StepWizard, OtpStep), documented the required SESSION_SECRET env var, and updated the affected tests. Verified with the full suite (119 tests pass) and a clean production build.
+
+**Notable decisions:** Chose stateless signed tokens over Vercel KV / Upstash Redis because the sensitive OTP code is never stored server-side (Twilio Verify owns it) — the store only held prefill data and counters, so no external infra was warranted. Accepted the tradeoff that a client could replay an older token to reset the app-level attempt/resend counters, since Twilio Verify enforces the authoritative brute-force/expiry limits; documented this in code. Made clearSession a no-op and adjusted the "clears session on success" test accordingly, since stateless tokens are discarded client-side rather than deleted server-side. Requires setting SESSION_SECRET in production.
+
+**Files touched:** lib/session-cache.ts, lib/session-cache.test.ts, app/api/identity/match/route.ts, app/api/identity/verify-otp/route.ts, app/api/identity/verify-otp/route.test.ts, app/api/identity/resend-otp/route.ts, app/api/identity/resend-otp/route.test.ts, components/steps/IdentityStep.tsx, components/steps/OtpStep.tsx, components/StepWizard.tsx, .env.example
+
+---

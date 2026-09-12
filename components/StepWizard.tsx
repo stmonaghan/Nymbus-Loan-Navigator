@@ -70,12 +70,14 @@ function ProgressBar({ label }: { label: string }) {
 export function StepWizard({ onComplete }: StepWizardProps) {
   const [currentStep, setCurrentStep] = useState<WizardStep>('identity');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [sessionToken, setSessionToken] = useState<string>('');
   const [confirmedInfo, setConfirmedInfo] = useState<ConfirmedInfo | null>(null);
 
   // ── IdentityStep callbacks ──
 
-  const handleMatchSuccess = useCallback((phone: string) => {
+  const handleMatchSuccess = useCallback((phone: string, token: string) => {
     setPhoneNumber(phone);
+    setSessionToken(token);
     setCurrentStep('otp');
   }, []);
 
@@ -164,6 +166,7 @@ export function StepWizard({ onComplete }: StepWizardProps) {
       {currentStep === 'otp' && (
         <OtpStep
           phoneNumber={phoneNumber}
+          sessionToken={sessionToken}
           onVerified={handleOtpVerified}
         />
       )}

@@ -14,13 +14,13 @@ import {
 const E164_US_RE = /^\+1\d{10}$/;
 
 function validateInput(body: unknown):
-  | { valid: true; phoneNumber: string }
+  | { valid: true; phoneNumber: string; sessionToken: string }
   | { valid: false; message: string } {
   if (!body || typeof body !== 'object') {
     return { valid: false, message: 'Request body must be a JSON object.' };
   }
 
-  const { phoneNumber } = body as Record<string, unknown>;
+  const { phoneNumber, sessionToken } = body as Record<string, unknown>;
 
   if (typeof phoneNumber !== 'string' || !E164_US_RE.test(phoneNumber)) {
     return {
@@ -30,7 +30,14 @@ function validateInput(body: unknown):
     };
   }
 
-  return { valid: true, phoneNumber };
+  if (typeof sessionToken !== 'string' || sessionToken.length === 0) {
+    return {
+      valid: false,
+      message: 'sessionToken is required.',
+    };
+  }
+
+  return { valid: true, phoneNumber, sessionToken };
 }
 
 // ─────────────────────────────────────────────
@@ -58,10 +65,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { phoneNumber } = parsed;
+  const { phoneNumber, sessionToken } = parsed;
 
-  // 3. Session check
-  const session = getSession(phoneNumber);
+  // 3. Session check — decode + verify the signed token bound to this number
+  const session = getSession(phoneNumber, sessionToken);
   if (!session) {
     return NextResponse.json(
       { error: 'session_not_found' },
@@ -70,7 +77,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   // 4. Resend limit check — increment first; bail if exceeded
-  const { exceeded } = incrementResend(phoneNumber);
+  const { exceeded, token } = incrementResend(session);
   if (exceeded) {
     return NextResponse.json(
       { error: 'resend_limit_exceeded' },
@@ -87,8 +94,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  // 6. Success
-  return NextResponse.json({ resent: true }, { status: 200 });
+  // 6. Success — return the refreshed token carrying the new resend count
+  return NextResponse.json({ resent: true, sessionToken: token }, { status: 200 });
 }
 
 // Return 405 for all other HTTP methods

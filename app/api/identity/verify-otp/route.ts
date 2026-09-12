@@ -37,13 +37,13 @@ const E164_US_RE = /^\+1\d{10}$/;
 const SIX_DIGIT_RE = /^\d{6}$/;
 
 function validateInput(body: unknown):
-  | { valid: true; phoneNumber: string; code: string }
+  | { valid: true; phoneNumber: string; code: string; sessionToken: string }
   | { valid: false; message: string } {
   if (!body || typeof body !== 'object') {
     return { valid: false, message: 'Request body must be a JSON object.' };
   }
 
-  const { phoneNumber, code } = body as Record<string, unknown>;
+  const { phoneNumber, code, sessionToken } = body as Record<string, unknown>;
 
   if (typeof phoneNumber !== 'string' || !E164_US_RE.test(phoneNumber)) {
     return {
@@ -60,7 +60,14 @@ function validateInput(body: unknown):
     };
   }
 
-  return { valid: true, phoneNumber, code };
+  if (typeof sessionToken !== 'string' || sessionToken.length === 0) {
+    return {
+      valid: false,
+      message: 'sessionToken is required.',
+    };
+  }
+
+  return { valid: true, phoneNumber, code, sessionToken };
 }
 
 // ─────────────────────────────────────────────
@@ -88,10 +95,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { phoneNumber, code } = parsed;
+  const { phoneNumber, code, sessionToken } = parsed;
 
-  // 3. Session check
-  const session = getSession(phoneNumber);
+  // 3. Session check — decode + verify the signed token bound to this number
+  const session = getSession(phoneNumber, sessionToken);
   if (!session) {
     return NextResponse.json(
       { error: 'session_not_found' },
@@ -113,9 +120,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const approved: boolean = isTestBypass || (await checkOtp(phoneNumber, code));
 
-  // 6. Failure path — increment counter, possibly lock session
+  // 6. Failure path — increment counter, possibly lock session.
+  //    Return the refreshed token so the client sends the updated counters
+  //    on its next attempt.
   if (!approved) {
-    const { attempts, locked } = incrementOtpAttempts(phoneNumber);
+    const { attempts, locked, token } = incrementOtpAttempts(session);
     const attemptsRemaining = locked ? 0 : MAX_OTP_ATTEMPTS - attempts;
 
     return NextResponse.json(
@@ -123,12 +132,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'otp_invalid',
         locked,
         attemptsRemaining,
+        sessionToken: token,
       },
       { status: 422 }
     );
   }
 
-  // 7. Success path — clear session and return prefill data
+  // 7. Success path — return prefill data. Session token is simply discarded
+  //    client-side (stateless), so there is nothing to clear server-side.
   const record = session.record;
   clearSession(phoneNumber);
 

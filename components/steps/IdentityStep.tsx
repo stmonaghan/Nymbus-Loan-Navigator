@@ -7,7 +7,7 @@ import React, { useState, useCallback, useId } from 'react';
 // ─────────────────────────────────────────────
 
 export interface IdentityStepProps {
-  onMatchSuccess: (phoneNumber: string) => void;
+  onMatchSuccess: (phoneNumber: string, sessionToken: string) => void;
   onNoMatch: () => void;
 }
 
@@ -148,10 +148,17 @@ export function IdentityStep({ onMatchSuccess, onNoMatch }: IdentityStepProps) {
           return;
         }
 
-        const data = (await res.json()) as { matched: boolean };
+        const data = (await res.json()) as {
+          matched: boolean;
+          sessionToken?: string;
+        };
 
-        if (data.matched) {
-          onMatchSuccess(values.phoneNumber);
+        if (data.matched && data.sessionToken) {
+          onMatchSuccess(values.phoneNumber, data.sessionToken);
+        } else if (data.matched) {
+          // Matched but no token returned — treat as a server error rather
+          // than proceeding into an unusable OTP step.
+          setSubmitError('Something went wrong. Please try again.');
         } else {
           onNoMatch();
         }

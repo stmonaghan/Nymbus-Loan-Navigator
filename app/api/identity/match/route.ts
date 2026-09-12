@@ -120,11 +120,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  // 7. Cache matched record in session
-  createSession(phoneNumber, record);
+  // 7. Create a signed session token holding the matched record + counters.
+  //    Stateless: the client stores this and returns it on verify/resend, so
+  //    it survives across separate serverless invocations on Vercel.
+  const sessionToken = createSession(phoneNumber, record);
 
-  // 8. Return success — never include record/PII at this stage
-  return NextResponse.json({ matched: true, summaryScore }, { status: 200 });
+  // 8. Return success + session token — never include record/PII at this stage
+  return NextResponse.json(
+    { matched: true, summaryScore, sessionToken },
+    { status: 200 }
+  );
 }
 
 // Return 405 for all other HTTP methods
