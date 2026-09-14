@@ -21,6 +21,11 @@ coverage/
 .env.test.local
 .env.production.local
 
+# ─── Local-only mock data ────────────────────────────────────────────────────
+# Optional local overlay for mock identity-match records (e.g. your own real
+# phone number for end-to-end OTP testing). Never commit real PII.
+lib/mock-mno-records.local.json
+
 # ─── OS / editor noise ───────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db

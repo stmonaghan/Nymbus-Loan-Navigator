@@ -1,0 +1,13 @@
+{
+  "_comment": "Copy this file to mock-mno-records.local.json (same folder) and add your own test entries. That file is gitignored and merges on top of mock-mno-records.json (local entries win on key collision). Do NOT put anyone else's real PII here. The _comment key is ignored by the matcher since it is not a valid phone-number key.",
+  "+15555559999": {
+    "firstName": "Your",
+    "lastName": "Name",
+    "dob": "1990-01-01",
+    "addressLine1": "1 Test St",
+    "city": "Testville",
+    "state": "CA",
+    "postalCode": "90001",
+    "email": "you@example.com"
+  }
+}

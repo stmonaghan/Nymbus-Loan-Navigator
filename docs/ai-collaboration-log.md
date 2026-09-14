@@ -71,3 +71,23 @@ This file is automatically maintained by Kiro hooks. Each entry records a user p
 **Files touched:** lib/session-cache.ts, lib/session-cache.test.ts, app/api/identity/match/route.ts, app/api/identity/verify-otp/route.ts, app/api/identity/verify-otp/route.test.ts, app/api/identity/resend-otp/route.ts, app/api/identity/resend-otp/route.test.ts, components/steps/IdentityStep.tsx, components/steps/OtpStep.tsx, components/StepWizard.tsx, .env.example
 
 ---
+## 2026-09-13T19:23:16 EDT
+**What was done:** Added support for an optional, gitignored local overlay for mock identity-match records
+
+**Summary:** Updated lib/mno-mock.ts to load an optional lib/mock-mno-records.local.json at module init and merge it on top of the committed fixture (local entries win on key collision), so a developer can add their own real phone number for end-to-end OTP testing without committing it. Added the local file to .gitignore, created a committed mock-mno-records.local.example.json template, and verified the merge with a temporary smoke test (since removed). Confirmed the file is gitignored, all 119 tests pass, and the production build compiles.
+
+**Notable decisions:** Used a runtime fs.readFileSync instead of a static import for the overlay, because a static import would fail the build/typecheck whenever the file is absent (the normal case in the public repo and CI); this is safe since matchIdentity runs server-side only. Treated a missing file (ENOENT) as a silent no-op and only warn on malformed JSON. Committed a .local.example.json template for discoverability while keeping the real .local.json ignored. The overlay-loading code path is verified manually rather than by a permanent test, since the local file is intentionally absent from the repo.
+
+**Files touched:** lib/mno-mock.ts, .gitignore, lib/mock-mno-records.local.example.json
+
+---
+## 2026-09-13T20:18:29 EDT
+**What was done:** Removed real phone numbers from the committed fixture and added an env-var overlay for identity-match records
+
+**Summary:** Deleted the two real entries (+13026900497, +14132976798) from lib/mock-mno-records.json, leaving only the three fictional records (Smith, Johnson, Patel). Extended lib/mno-mock.ts so, in addition to the gitignored local file, it also reads an optional MNO_LOCAL_OVERLAY_JSON environment variable (same JSON shape as a string) and merges it into the match data — the Vercel-friendly path for testing with a real number without committing it. Documented the new variable in .env.example and verified the env overlay, its malformed-input handling, the full test suite (119 pass), and a clean production build.
+
+**Notable decisions:** Set merge precedence to base fixture < local file < env var, so the env overlay wins on collision. Treated an unset/empty env var as a silent no-op and malformed JSON as a logged, non-throwing skip, mirroring the local-file pattern. Also removed the same two real numbers from the TEST_PHONE_NUMBERS bypass set in verify-otp/route.ts (not explicitly requested) because leaving them there would keep real numbers committed to the repo, contradicting the goal. Left the user's gitignored mock-mno-records.local.json untouched. The overlay-loading code paths remain verified manually via temporary smoke tests (since removed) rather than by permanent tests.
+
+**Files touched:** lib/mock-mno-records.json, lib/mno-mock.ts, app/api/identity/verify-otp/route.ts, .env.example
+
+---
